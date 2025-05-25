@@ -1,0 +1,102 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Winky+Rough:ital,wght@0,300..900;1,300..900&display=swap");
+@import "tailwindcss";
+
+body {
+  font-family: "Poppins", sans-serif;
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  .animate-slide-in-left {
+    animation: slideInLeft 0.5s ease;
+  }
+
+  .animate-slide-in-right {
+    animation: slideInRight 0.5s ease;
+  }
+
+  .animate-pulse-glow {
+    animation: pulseGlow 2s infinite ease-in-out;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulseGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.9);
+  }
+}
+
+.nav-link {
+  position: relative;
+}
+
+.nav-link::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #f1c40f, #e74c3c);
+  transition: all 0.5s ease-in-out;
+}
+
+.nav-link:hover::before {
+  width: 100%;
+  border-radius: 50%;
+}
+
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fadeInScale {
+  animation: fadeInScale 0.35s ease forwards;
+}
