@@ -21,6 +21,19 @@ const Members = () => {
     setAddmembership((prev) => !prev);
   };
 
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:4000/members/delete-member/${id}`, {
+        withCredentials: true,
+      });
+      setData(prevData => prevData.filter(item => item._id !== id));
+      toast.success("Member deleted successfully!");
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to delete member!");
+    }
+  };
+
   const [startFrom, setStartFrom] = useState(0);
   const [endTo, setEndTo] = useState(9);
   const [totalData, setTotalData] = useState(0);
@@ -201,7 +214,9 @@ const Members = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
           {data.map((item, index) => {
-            return <MemberCard item={item} key={index} />;
+            return (
+              <MemberCard item={item} key={index} onDelete={handleDelete} />
+            );
           })}
         </div>
       </main>

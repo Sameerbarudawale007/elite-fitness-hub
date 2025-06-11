@@ -25,5 +25,6 @@ router.get("/inactive-member", auth, MemberControllers.inActiveMember);
 router.get("/get-member/:id", auth, MemberControllers.getMemberDetails);
 router.post("/change-status/:id", auth, MemberControllers.changeStatus);
 router.put("/update-member-plan/:id", auth, MemberControllers.updateMemberPlan);
+router.delete("/delete-member/:id", auth, MemberControllers.deleteMember);
 
 module.exports = router;

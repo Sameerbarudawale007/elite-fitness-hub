@@ -373,3 +373,14 @@ exports.updateMemberPlan = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+exports.deleteMember = async (req, res) => {
+  try {
+    const result = await Member.findByIdAndDelete(req.params.id);
+    if (!result) return res.status(404).json({ error: "Member not found" });
+
+    res.json({ message: "Member deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to delete member" });
+  }
+};

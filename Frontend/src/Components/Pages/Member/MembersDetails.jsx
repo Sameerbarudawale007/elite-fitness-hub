@@ -123,7 +123,7 @@ const MembersDetails = () => {
         <div className="mt-10 flex flex-col lg:flex-row items-center justify-center gap-6">
           <div className="w-40 cursor-pointer sm:w-48 md:w-56 lg:w-[30%] group relative overflow-hidden rounded-2xl shadow-2xl transition-transform duration-500 hover:scale-105">
             <img
-              className="w-full h-full object-cover rounded-2xl transition duration-500 group-hover:blur-[1px] group-hover:brightness-110"
+              className="w-full h-full object-cover rounded-2xl transition duration-500"
               src={data?.profilePic}
               alt="Profile"
             />

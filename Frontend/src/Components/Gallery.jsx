@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSwipeable } from "react-swipeable";
+import { motion, AnimatePresence } from "framer-motion";
 import "../index.css";
 
 const images = [
@@ -56,6 +57,18 @@ const media = [
   ...images.map((src) => ({ type: "image", src })),
   ...videos.map((src) => ({ type: "video", src })),
 ];
+
+const variants = {
+  enter: (direction) => ({
+    x: direction === "next" ? 300 : -300,
+    opacity: 0,
+  }),
+  center: { x: 0, opacity: 1 },
+  exit: (direction) => ({
+    x: direction === "next" ? -300 : 300,
+    opacity: 0,
+  }),
+};
 
 const Gallery = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -119,87 +132,107 @@ const Gallery = () => {
       </h2>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         {images.slice(0, 5).map((src, index) => (
-          <img
+          <motion.img
             key={index}
             src={src}
             alt={`Gym ${index}`}
-            className="w-full h-48 object-cover rounded-lg cursor-pointer hover:scale-110 transition-transform duration-300 shadow-md hover:shadow-2xl"
+            className="w-full h-48 object-cover rounded-lg cursor-pointer shadow-md"
+            whileHover={{ scale: 1.1, boxShadow: "0 0 20px #f97316" }} // orange glow on hover
+            transition={{ duration: 0.3 }}
             onClick={() => openLightbox(index)}
           />
         ))}
 
-        <div
-          className="w-full h-48 flex items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900 text-white rounded-lg cursor-pointer text-xl font-semibold hover:shadow-xl hover:scale-105 transition duration-300"
+        <motion.div
+          className="w-full h-48 flex items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900 text-white rounded-lg cursor-pointer text-xl font-semibold"
+          whileHover={{ scale: 1.05, boxShadow: "0 0 15px #f97316" }}
+          transition={{ duration: 0.3 }}
           onClick={() => openLightbox(0)}
         >
           View All
-        </div>
+        </motion.div>
       </div>
 
-      {isOpen && (
-        <div
-          className={
-            "fixed inset-0 bg-black bg-opacity-70 backdrop-blur-md flex items-center justify-center z-50 transition-all duration-500 cursor-pointer" +
-            (isFullscreen ? "p-0" : "p-4")
-          }
-          onMouseEnter={() => clearInterval(slideshowRef.current)}
-          onMouseLeave={() =>
-            (slideshowRef.current = setInterval(nextImage, 3500))
-          }
-        >
-          <div
-            {...swipeHandlers}
-            className="relative w-full h-full flex justify-center items-center"
+      <AnimatePresence initial={false} mode="wait">
+        {isOpen && (
+          <motion.div
+            key="lightbox"
+            className={
+              "fixed inset-0 bg-black bg-opacity-70 backdrop-blur-md flex items-center justify-center z-50 cursor-pointer " +
+              (isFullscreen ? "p-0" : "p-4")
+            }
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onMouseEnter={() => clearInterval(slideshowRef.current)}
+            onMouseLeave={() =>
+              (slideshowRef.current = setInterval(nextImage, 3500))
+            }
           >
-            <button
-              className="absolute top-4 right-6 text-white text-6xl cursor-pointer font-bold z-50 transition-all duration-500 transform scale-95 hover:scale-100"
-              onClick={closeLightbox}
+            <div
+              {...swipeHandlers}
+              className="relative w-full h-full flex justify-center items-center"
+              onClick={(e) => e.stopPropagation()} // prevent close on inner clicks
             >
-              &times;
-            </button>
-            <button
-              className="absolute left-4 text-white text-6xl z-50 cursor-pointer transition-all duration-500 transform scale-95 hover:scale-100"
-              onClick={prevImage}
-            >
-              ❮
-            </button>
+              <button
+                className="absolute top-4 right-6 text-white text-6xl cursor-pointer font-bold z-50 transition-all duration-500 transform scale-95 hover:scale-100"
+                onClick={closeLightbox}
+              >
+                &times;
+              </button>
+              <button
+                className="absolute left-4 text-white text-6xl z-50 cursor-pointer transition-all duration-500 transform scale-95 hover:scale-100"
+                onClick={prevImage}
+              >
+                ❮
+              </button>
 
-            {media[currentIndex].type === "video" ? (
-              <video
+              <motion.div
                 key={currentIndex}
-                src={media[currentIndex].src}
-                controls
-                autoPlay
-                muted
-                className="max-w-full max-h-[80vh] rounded-xl transition-all duration-500 transform scale-95 hover:scale-100"
-              />
-            ) : (
-              <img
-                key={currentIndex}
-                src={media[currentIndex].src}
-                alt={`Media ${currentIndex}`}
-                className="max-w-full max-h-[80vh] rounded-xl transition-all duration-500 transform scale-95 hover:scale-100"
-              />
-            )}
+                custom={direction}
+                variants={variants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.5 }}
+                className="max-w-full max-h-[80vh] rounded-xl"
+              >
+                {media[currentIndex].type === "video" ? (
+                  <video
+                    src={media[currentIndex].src}
+                    controls
+                    autoPlay
+                    muted
+                    className="max-w-full max-h-[80vh] rounded-xl"
+                  />
+                ) : (
+                  <img
+                    src={media[currentIndex].src}
+                    alt={`Media ${currentIndex}`}
+                    className="max-w-full max-h-[80vh] rounded-xl"
+                  />
+                )}
+              </motion.div>
 
-            <button
-              className="absolute right-4 text-white text-6xl cursor-pointer z-50"
-              onClick={nextImage}
-            >
-              ❯
-            </button>
-            <button
-              className="absolute bottom-16 right-6 text-white cursor-pointer px-3 py-1 rounded border border-white text-xs hover:bg-white hover:text-black transition-all duration-500 transform scale-95 hover:scale-100"
-              onClick={toggleFullscreen}
-            >
-              {isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
-            </button>
-            <div className="absolute bottom-4 text-white cursor-pointer text-sm">
-              {currentIndex + 1} / {media.length}
+              <button
+                className="absolute right-4 text-white text-6xl cursor-pointer z-50"
+                onClick={nextImage}
+              >
+                ❯
+              </button>
+              <button
+                className="absolute bottom-16 right-6 text-white cursor-pointer px-3 py-1 rounded border border-white text-xs hover:bg-white hover:text-black transition-all duration-500 transform scale-95 hover:scale-100"
+                onClick={toggleFullscreen}
+              >
+                {isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+              </button>
+              <div className="absolute bottom-4 text-white cursor-pointer text-sm">
+                {currentIndex + 1} / {media.length}
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className="flex flex-col items-center px-4 py-10 md:py-16 bg-black">
         <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-center font-extrabold text-orange-600 animate-pulse transition-all duration-300">

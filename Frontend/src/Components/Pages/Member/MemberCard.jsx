@@ -1,12 +1,26 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import DeleteIcon from "@mui/icons-material/Delete";
 
-const MemberCard = ({ item }) => {
+const MemberCard = ({ item, onDelete }) => {
+  const handleDelete = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (onDelete) onDelete(item._id);
+  };
+
   return (
     <Link
       to={`/member/${item?._id}`}
       className="bg-gradient-to-br from-zinc-900 to-zinc-800 border border-gray-700 rounded-2xl shadow-md hover:shadow-xl transform hover:scale-105 transition duration-300 cursor-pointer max-w-full"
     >
+      <button
+        onClick={handleDelete}
+        className="absolute top-3 right-3 text-red-500 hover:text-red-700 z-20 bg-zinc-900 rounded-full p-3 cursor-pointer transition duration-300 ease-in-out hover:scale-110"
+        title="Delete Member"
+      >
+        <DeleteIcon />
+      </button>
       <div className="relative flex justify-center items-center pt-6">
         <div className="w-24 h-24 rounded-full relative">
           <img
