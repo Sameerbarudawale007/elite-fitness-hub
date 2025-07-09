@@ -1,5 +1,5 @@
-const Member = require("../Models/member");
-const MemberShip = require("../Models/membership");
+const Member = require("../tempmodels/member");
+const MemberShip = require("../tempmodels/membership");
 const jwt = require("jsonwebtoken");
 
 exports.getAllMember = async (req, res) => {

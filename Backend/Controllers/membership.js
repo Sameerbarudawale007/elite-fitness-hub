@@ -1,4 +1,4 @@
-const MemberShip = require("../Models/membership");
+const MemberShip = require("../tempmodels/membership");
 
 exports.addMemberShip = async (req, res) => {
   try {
