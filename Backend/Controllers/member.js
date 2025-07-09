@@ -59,7 +59,38 @@ exports.registerMember = async (req, res) => {
     const { name, mobile, aadhaar, address, membership, file, joiningDate } =
       req.body;
 
-    // Check if member already exists
+    if (
+      !name ||
+      !mobile ||
+      !aadhaar ||
+      !address ||
+      !membership ||
+      !file ||
+      !joiningDate
+    ) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+
+    if (!/^\d{10}$/.test(mobile)) {
+      return res
+        .status(400)
+        .json({ error: "Mobile number must be exactly 10 digits" });
+    }
+
+    if (!/^\d{12}$/.test(aadhaar)) {
+      return res
+        .status(400)
+        .json({ error: "Aadhaar number must be exactly 12 digits" });
+    }
+
+    const validImageExtensions = ["jpg", "jpeg", "png"];
+    const ext = file.split(".").pop().toLowerCase();
+    if (!validImageExtensions.includes(ext)) {
+      return res
+        .status(400)
+        .json({ error: "Only JPG, JPEG, and PNG images are allowed" });
+    }
+
     const existingMember = await Member.findOne({
       gym: req.gym._id,
       phoneNumber: mobile,
@@ -70,16 +101,16 @@ exports.registerMember = async (req, res) => {
         .json({ error: "Already registered with this phone number" });
     }
 
-    const membershipDoc = await MemberShip.findOne({ _id: membership });
+    const membershipDoc = await MemberShip.findById(membership);
     if (!membershipDoc) {
-      return res.status(409).json({ error: "No Such Membership are there" });
+      return res.status(409).json({ error: "No Such Membership found" });
     }
 
     const membershipMonth = membershipDoc.months;
-    let jngDate = new Date(joiningDate);
+    const jngDate = new Date(joiningDate);
     const nextBillDate = addMonthsToDate(membershipMonth, jngDate);
 
-    let newmember = new Member({
+    const newmember = new Member({
       name,
       phoneNumber: mobile,
       aadhaarNumber: aadhaar,
@@ -126,12 +157,10 @@ exports.searchMember = async (req, res) => {
 
 exports.monthlyMember = async (req, res) => {
   try {
-    // ✅ Manually extract token from cookies
     const token = req.cookies.cookie_token;
     const decoded = jwt.verify(token, process.env.JWT_secretKey);
     const gym_id = decoded.gym_id;
 
-    // ✅ Use this gym_id to query members
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
     const endOfMonth = new Date(
@@ -164,7 +193,6 @@ exports.monthlyMember = async (req, res) => {
 
 exports.expiringWithin3Days = async (req, res) => {
   try {
-    // ✅ Extract gym_id from token in cookies
     const token = req.cookies.cookie_token;
     const decoded = jwt.verify(token, process.env.JWT_secretKey);
     const gym_id = decoded.gym_id;
@@ -174,7 +202,7 @@ exports.expiringWithin3Days = async (req, res) => {
     nextThreeDays.setDate(today.getDate() + 3);
 
     const member = await Member.find({
-      gym: gym_id, // ✅ use extracted gym_id
+      gym: gym_id,
       nextBillDate: {
         $gte: today,
         $lte: nextThreeDays,
@@ -196,7 +224,6 @@ exports.expiringWithin3Days = async (req, res) => {
 
 exports.expiringWithin4To7Days = async (req, res) => {
   try {
-    // ✅ Extract gym_id
     const token = req.cookies.cookie_token;
     const decoded = jwt.verify(token, process.env.JWT_secretKey);
     const gym_id = decoded.gym_id;
@@ -209,7 +236,7 @@ exports.expiringWithin4To7Days = async (req, res) => {
     next7Days.setDate(today.getDate() + 7);
 
     const member = await Member.find({
-      gym: gym_id, // ✅ use decoded gym_id
+      gym: gym_id,
       nextBillDate: {
         $gte: next4Days,
         $lte: next7Days,

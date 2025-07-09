@@ -10,20 +10,27 @@ export default function Signup() {
     userName: "",
     email: "",
     password: "",
-    profilePic:
-      "https://imgs.search.brave.com/1OA6DJ-GWRTkU7ZI17Z9aVWZ2iNy7Bc7vlymr0DXuDk/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzL2I1LzZj/L2IyL2I1NmNiMjg1/ZTYyMzIxNTdkZmQ2/Nzk3NmE3ZjkyMGE5/LmpwZw",
+    profilePic: "",
   });
   const [loader, setLoader] = useState(false);
 
-  const handleOnChange = (event, userName) => {
-    setInputField({ ...inputField, [userName]: event.target.value });
+  const handleOnChange = (event, field) => {
+    setInputField({ ...inputField, [field]: event.target.value });
   };
 
   const uploadImage = async (event) => {
     setLoader(true);
-    const files = event.target.files;
+    const file = event.target.files[0];
+
+    const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Only JPG, JPEG, and PNG images are allowed.");
+      setLoader(false);
+      return;
+    }
+
     const data = new FormData();
-    data.append("file", files[0]);
+    data.append("file", file);
     data.append("upload_preset", "The-Tiger-Gym");
 
     try {
@@ -31,10 +38,9 @@ export default function Signup() {
         "https://api.cloudinary.com/v1_1/dxgj9kcey/image/upload",
         data
       );
-      const imageUrl = response.data.url;
-      setLoader(false);
-
+      const imageUrl = response.data.secure_url;
       setInputField({ ...inputField, profilePic: imageUrl });
+      setLoader(false);
     } catch (err) {
       console.log(err);
       setLoader(false);
@@ -44,15 +50,34 @@ export default function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const { userName, email, password, profilePic } = inputField;
+
+    if (!userName || !email || !password || !profilePic) {
+      return toast.error("Please fill in all fields.");
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return toast.error("Please enter a valid email.");
+    }
+
+    if (password.length < 6) {
+      return toast.error("Password must be at least 6 characters long.");
+    }
+
+    const validExtensions = ["jpg", "jpeg", "png"];
+    const fileExt = profilePic.split(".").pop().toLowerCase();
+    if (!validExtensions.includes(fileExt)) {
+      return toast.error("Profile photo must be JPG, JPEG, or PNG.");
+    }
 
     try {
       const res = await axios.post(
         "http://localhost:4000/auth/register",
         inputField
       );
-      console.log(res.data);
-
       toast.success(res.data.message);
+
       setTimeout(() => {
         navigate("/login");
       }, 2000);
@@ -65,8 +90,7 @@ export default function Signup() {
       });
     } catch (err) {
       console.error(err);
-      const errorMsg = err.response.data.message;
-      toast.error(errorMsg);
+      toast.error(err.response.data.error || "Something went wrong.");
     }
   };
 
@@ -86,7 +110,6 @@ export default function Signup() {
               value={inputField.userName}
               onChange={(e) => handleOnChange(e, "userName")}
               type="text"
-              name="name"
               className="w-full px-4 py-2 rounded-md bg-gray-900 text-white border border-orange-500 focus:outline-none focus:ring-2 focus:ring-yellow-600"
               placeholder="John Doe"
             />
@@ -98,7 +121,6 @@ export default function Signup() {
               value={inputField.email}
               onChange={(e) => handleOnChange(e, "email")}
               type="email"
-              name="email"
               className="w-full px-4 py-2 rounded-md bg-gray-900 text-white border border-orange-500 focus:outline-none focus:ring-2 focus:ring-yellow-600"
               placeholder="you@example.com"
             />
@@ -110,7 +132,6 @@ export default function Signup() {
               value={inputField.password}
               onChange={(e) => handleOnChange(e, "password")}
               type="password"
-              name="password"
               className="w-full px-4 py-2 rounded-md bg-gray-900 text-white border border-orange-500 focus:outline-none focus:ring-2 focus:ring-yellow-600"
               placeholder="********"
             />
@@ -122,10 +143,7 @@ export default function Signup() {
             </label>
             <input
               type="file"
-              onChange={(e) => {
-                uploadImage(e);
-              }}
-              name="profilePic"
+              onChange={uploadImage}
               accept="image/*"
               className="w-full bg-gray-800 text-white file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-yellow-600 file:text-white hover:file:bg-yellow-700"
             />
@@ -134,22 +152,24 @@ export default function Signup() {
                 <CircularProgress size={24} sx={{ color: "yellow" }} />
               </div>
             )}
-            <img
-              src={inputField.profilePic}
-              alt="Preview"
-              className="mt-4 h-24 w-24 rounded-full object-cover object-center mx-auto border-2 border-yellow-400"
-            />
+            {inputField.profilePic && (
+              <img
+                src={inputField.profilePic}
+                alt="Preview"
+                className="mt-4 h-24 w-24 rounded-full object-cover object-center mx-auto border-2 border-yellow-400"
+              />
+            )}
           </div>
 
           <button
-            onClick={() => handleSubmit}
             type="submit"
             className="w-full cursor-pointer py-3 rounded-md bg-orange-600 hover:bg-orange-700 transition font-bold text-black text-lg"
           >
             Sign Up & Level Up 💪
           </button>
         </form>
-        <p className="text-sm md:text-sm text-center px-1 sm:px-4 mt-2 sm:mt-6 md:mt-8">
+
+        <p className="text-sm text-center px-1 sm:px-4 mt-6">
           🙋‍♂️ Already have an account?{" "}
           <Link
             to="/login"

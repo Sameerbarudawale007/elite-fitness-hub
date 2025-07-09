@@ -6,6 +6,29 @@ exports.register = async (req, res) => {
   try {
     const { userName, email, password, profilePic } = req.body;
 
+    if (!userName || !email || !password || !profilePic) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ error: "Invalid email format" });
+    }
+
+    if (password.length < 6) {
+      return res
+        .status(400)
+        .json({ error: "Password must be at least 6 characters" });
+    }
+
+    const allowedExt = ["jpg", "jpeg", "png"];
+    const fileExt = profilePic.split(".").pop().toLowerCase();
+    if (!allowedExt.includes(fileExt)) {
+      return res
+        .status(400)
+        .json({ error: "Only JPG, JPEG, and PNG images are allowed" });
+    }
+
     const isExist = await Gym.findOne({ userName });
     if (isExist) {
       return res.status(400).json({ error: "User already exists" });
@@ -13,7 +36,6 @@ exports.register = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // 👉 Check if any admin exists
     const isAdminExists = await Gym.findOne({ role: "admin" });
 
     const gym = new Gym({
@@ -21,14 +43,16 @@ exports.register = async (req, res) => {
       email,
       password: hashedPassword,
       profilePic,
-      role: isAdminExists ? "user" : "admin", // ✅ First signup = admin, rest = user
+      role: isAdminExists ? "user" : "admin",
     });
 
     await gym.save();
 
-    res
-      .status(201)
-      .json({ message: "Signup successful", sucess: "yes", data: gym });
+    res.status(201).json({
+      message: "Signup successful",
+      sucess: "yes",
+      data: gym,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server Error" });
@@ -42,13 +66,11 @@ exports.login = async (req, res) => {
     const gym = await Gym.findOne({ userName });
 
     if (gym && (await bcrypt.compare(password, gym.password))) {
-      // 👇 STEP 1: Get the correct gym_id to put in the token
       let gymIdToUse;
 
       if (gym.role === "admin") {
-        gymIdToUse = gym._id; // if admin logs in, use their own ID
+        gymIdToUse = gym._id;
       } else {
-        // if user logs in, get the admin's ID
         const adminGym = await Gym.findOne({ role: "admin" });
         if (!adminGym) {
           return res.status(500).json({ error: "Admin not found" });
@@ -56,7 +78,6 @@ exports.login = async (req, res) => {
         gymIdToUse = adminGym._id;
       }
 
-      // 👇 STEP 2: create token with the correct (admin) gym ID
       const token = jwt.sign({ gym_id: gymIdToUse }, process.env.JWT_secretKey);
       res.cookie("cookie_token", token, {
         httpOnly: true,
