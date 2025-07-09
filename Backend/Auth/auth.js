@@ -1,4 +1,4 @@
-const Gym = require("../models/gym");
+const Gym = require("../tempmodels/gym");
 const jwt = require("jsonwebtoken");
 
 const auth = async (req, res, next) => {
