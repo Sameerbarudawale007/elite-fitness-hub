@@ -73,7 +73,7 @@ export default function Signup() {
 
     try {
       const res = await axios.post(
-        "http://localhost:4000/auth/register",
+        "https://elite-fitness-hub-backend.onrender.com/auth/register",
         inputField
       );
       toast.success(res.data.message);

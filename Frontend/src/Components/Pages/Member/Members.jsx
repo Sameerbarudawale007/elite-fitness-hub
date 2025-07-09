@@ -23,7 +23,7 @@ const Members = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:4000/members/delete-member/${id}`, {
+      await axios.delete(`https://elite-fitness-hub-backend.onrender.com/members/delete-member/${id}`, {
         withCredentials: true,
       });
       setData(prevData => prevData.filter(item => item._id !== id));

@@ -3,7 +3,7 @@ import axios from "axios";
 const getMonthlyJoined = async () => {
   try {
     const res = await axios.get(
-      "http://localhost:4000/members/monthly-member",
+      "https://elite-fitness-hub-backend.onrender.com/members/monthly-member",
       { withCredentials: true }
     );
     return res.data;
@@ -16,7 +16,7 @@ const getMonthlyJoined = async () => {
 const threeDayExpire = async () => {
   try {
     const res = await axios.get(
-      "http://localhost:4000/members/within-3-days-expiring",
+      "https://elite-fitness-hub-backend.onrender.com/members/within-3-days-expiring",
       { withCredentials: true }
     );
     return res.data;
@@ -29,7 +29,7 @@ const threeDayExpire = async () => {
 const fourToSevenDaysExpire = async () => {
   try {
     const res = await axios.get(
-      "http://localhost:4000/members/within-4-7-expiring",
+      "https://elite-fitness-hub-backend.onrender.com/members/within-4-7-expiring",
       { withCredentials: true }
     );
     return res.data;
@@ -41,7 +41,7 @@ const fourToSevenDaysExpire = async () => {
 
 const expired = async () => {
   try {
-    const res = await axios.get("http://localhost:4000/members/expired", {
+    const res = await axios.get("https://elite-fitness-hub-backend.onrender.com/members/expired", {
       withCredentials: true,
     });
     return res.data;
@@ -54,7 +54,7 @@ const expired = async () => {
 const inActiveMembers = async () => {
   try {
     const res = await axios.get(
-      "http://localhost:4000/members/inactive-member",
+      "https://elite-fitness-hub-backend.onrender.com/members/inactive-member",
       { withCredentials: true }
     );
     return res.data;
