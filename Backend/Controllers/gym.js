@@ -1,4 +1,4 @@
-const Gym = require("../models/gym");
+const Gym = require("../tempmodels/gym");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
