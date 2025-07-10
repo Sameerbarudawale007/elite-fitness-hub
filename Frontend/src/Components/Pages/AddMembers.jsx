@@ -45,7 +45,7 @@ const AddMembers = () => {
         "https://api.cloudinary.com/v1_1/dxgj9kcey/image/upload",
         data
       );
-      const imageUrl = response.data.url;
+      const imageUrl = response.data.secure_url;
       setInputField({ ...inputField, file: imageUrl });
     } catch (err) {
       console.error(err);
