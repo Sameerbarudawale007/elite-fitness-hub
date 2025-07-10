@@ -235,7 +235,7 @@ const AddMembers = () => {
             )}
             {inputField.file && (
               <img
-                src={inputField.file}
+                src={inputField.file.replace("http://", "https://")}
                 alt="Preview"
                 className="mt-5 h-28 w-28 mx-auto rounded-full object-cover border-2 border-yellow-400 hover:scale-110 transition-transform duration-300"
               />

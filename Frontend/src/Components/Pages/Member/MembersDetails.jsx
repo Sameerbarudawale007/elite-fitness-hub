@@ -22,7 +22,7 @@ const MembersDetails = () => {
 
   const fetchMembership = async () => {
     await axios
-      .get("http://localhost:4000/plans/get-membership", {
+      .get("https://elite-fitness-hub-backend.onrender.com/plans/get-membership", {
         withCredentials: true,
       })
       .then((res) => {
@@ -37,7 +37,7 @@ const MembersDetails = () => {
 
   const fetchData = async () => {
     await axios
-      .get(`http://localhost:4000/members/get-member/${id}`, {
+      .get(`https://elite-fitness-hub-backend.onrender.com/members/get-member/${id}`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -56,7 +56,7 @@ const MembersDetails = () => {
     let newStatus = status === "active" ? "pending" : "active";
     await axios
       .post(
-        `http://localhost:4000/members/change-status/${id}`,
+        `https://elite-fitness-hub-backend.onrender.com/members/change-status/${id}`,
         { status: newStatus },
         { withCredentials: true }
       )
