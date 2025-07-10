@@ -82,7 +82,7 @@ exports.login = async (req, res) => {
       res.cookie("cookie_token", token, {
         httpOnly: true,
         secure: true,
-        sameSite: "Lax",
+        sameSite: "None",
       });
 
       res.json({
