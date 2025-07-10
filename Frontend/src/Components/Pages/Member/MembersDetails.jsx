@@ -85,7 +85,7 @@ const MembersDetails = () => {
   const handleRenewSaveBtn = async () => {
     await axios
       .put(
-        `https://elite-fitness-hub-backend.onrender.com/members/update-member-plan/${id}`,
+        `http://localhost:4000/members/update-member-plan/${id}`,
         { membership: planMember },
         { withCredentials: true }
       )

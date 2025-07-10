@@ -24,7 +24,7 @@ export default function Login() {
 
     try {
       const res = await axios.post(
-        "https://elite-fitness-hub-backend.onrender.com/auth/login",
+        "http://localhost:4000/auth/login",
         loginField,
         { withCredentials: true }
       );
