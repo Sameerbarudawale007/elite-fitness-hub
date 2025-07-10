@@ -81,7 +81,7 @@ exports.login = async (req, res) => {
       const token = jwt.sign({ gym_id: gymIdToUse }, process.env.JWT_secretKey);
       res.cookie("cookie_token", token, {
         httpOnly: true,
-        secure: false,
+        secure: true,
         sameSite: "Lax",
       });
 
