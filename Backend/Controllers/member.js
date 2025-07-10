@@ -83,13 +83,13 @@ exports.registerMember = async (req, res) => {
         .json({ error: "Aadhaar number must be exactly 12 digits" });
     }
 
-    const validImageExtensions = ["jpg", "jpeg", "png"];
-    const ext = file.split(".").pop().toLowerCase();
-    if (!validImageExtensions.includes(ext)) {
-      return res
-        .status(400)
-        .json({ error: "Only JPG, JPEG, and PNG images are allowed" });
-    }
+    // const validImageExtensions = ["jpg", "jpeg", "png"];
+    // const ext = file.split(".").pop().toLowerCase();
+    // if (!validImageExtensions.includes(ext)) {
+    //   return res
+    //     .status(400)
+    //     .json({ error: "Only JPG, JPEG, and PNG images are allowed" });
+    // }
 
     const existingMember = await Member.findOne({
       gym: req.gym._id,

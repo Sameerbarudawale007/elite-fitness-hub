@@ -21,13 +21,13 @@ exports.register = async (req, res) => {
         .json({ error: "Password must be at least 6 characters" });
     }
 
-    const allowedExt = ["jpg", "jpeg", "png"];
-    const fileExt = profilePic.split(".").pop().toLowerCase();
-    if (!allowedExt.includes(fileExt)) {
-      return res
-        .status(400)
-        .json({ error: "Only JPG, JPEG, and PNG images are allowed" });
-    }
+    // const allowedExt = ["jpg", "jpeg", "png"];
+    // const fileExt = profilePic.split(".").pop().toLowerCase();
+    // if (!allowedExt.includes(fileExt)) {
+    //   return res
+    //     .status(400)
+    //     .json({ error: "Only JPG, JPEG, and PNG images are allowed" });
+    // }
 
     const isExist = await Gym.findOne({ userName });
     if (isExist) {
