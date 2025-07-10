@@ -57,7 +57,7 @@ const AddMembers = () => {
 
   const fetchMembership = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/plans/get-membership", {
+      const res = await axios.get("https://elite-fitness-hub-backend.onrender.com/plans/get-membership", {
         withCredentials: true,
       });
 

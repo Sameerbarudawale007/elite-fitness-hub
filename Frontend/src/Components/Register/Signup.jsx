@@ -48,51 +48,101 @@ export default function Signup() {
     }
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   const { userName, email, password, profilePic } = inputField;
+
+  //   if (!userName || !email || !password || !profilePic) {
+  //     return toast.error("Please fill in all fields.");
+  //   }
+
+  //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  //   if (!emailRegex.test(email)) {
+  //     return toast.error("Please enter a valid email.");
+  //   }
+
+  //   if (password.length < 6) {
+  //     return toast.error("Password must be at least 6 characters long.");
+  //   }
+
+  //   const validExtensions = ["jpg", "jpeg", "png"];
+  //   const fileExt = profilePic.split(".").pop().toLowerCase();
+  //   if (!validExtensions.includes(fileExt)) {
+  //     return toast.error("Profile photo must be JPG, JPEG, or PNG.");
+  //   }
+
+  //   try {
+  //     const res = await axios.post(
+  //       "http://localhost:4000/auth/register",
+  //       inputField
+  //     );
+  //     toast.success(res.data.message);
+
+  //     setTimeout(() => {
+  //       navigate("/login");
+  //     }, 2000);
+
+  //     setInputField({
+  //       userName: "",
+  //       email: "",
+  //       password: "",
+  //       profilePic: "",
+  //     });
+  //   } catch (err) {
+  //     console.error(err);
+  //     toast.error(err.response.data.error || "Something went wrong.");
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const { userName, email, password, profilePic } = inputField;
+  e.preventDefault();
+  const { userName, email, password, profilePic } = inputField;
 
-    if (!userName || !email || !password || !profilePic) {
-      return toast.error("Please fill in all fields.");
-    }
+  if (!userName || !email || !password || !profilePic) {
+    return toast.error("Please fill in all fields.");
+  }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return toast.error("Please enter a valid email.");
-    }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return toast.error("Please enter a valid email.");
+  }
 
-    if (password.length < 6) {
-      return toast.error("Password must be at least 6 characters long.");
-    }
+  if (password.length < 6) {
+    return toast.error("Password must be at least 6 characters long.");
+  }
 
-    const validExtensions = ["jpg", "jpeg", "png"];
-    const fileExt = profilePic.split(".").pop().toLowerCase();
-    if (!validExtensions.includes(fileExt)) {
-      return toast.error("Profile photo must be JPG, JPEG, or PNG.");
-    }
+  const validExtensions = ["jpg", "jpeg", "png"];
+  const fileExt = profilePic.split(".").pop().toLowerCase();
+  if (!validExtensions.includes(fileExt)) {
+    return toast.error("Profile photo must be JPG, JPEG, or PNG.");
+  }
 
-    try {
-      const res = await axios.post(
-        "http://localhost:4000/auth/register",
-        inputField
-      );
+  try {
+    const res = await axios.post(
+      "https://elite-fitness-hub-backend.onrender.com/auth/register",
+      inputField
+    );
+
+    if (res?.data?.message) {
       toast.success(res.data.message);
-
-      setTimeout(() => {
-        navigate("/login");
-      }, 2000);
-
-      setInputField({
-        userName: "",
-        email: "",
-        password: "",
-        profilePic: "",
-      });
-    } catch (err) {
-      console.error(err);
-      toast.error(err.response.data.error || "Something went wrong.");
+      setTimeout(() => navigate("/login"), 2000);
+    } else {
+      toast.error("Unexpected response from server.");
     }
-  };
+
+    setInputField({
+      userName: "",
+      email: "",
+      password: "",
+      profilePic: "",
+    });
+  } catch (err) {
+    console.error(err);
+    const message =
+      err?.response?.data?.error || err?.message || "Something went wrong.";
+    toast.error(message);
+  }
+};
 
   return (
     <div className="bg-black/50 backdrop-blur-sm min-h-screen text-white flex items-center justify-center px-4 sm:px-6 md:px-8">

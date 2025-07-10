@@ -19,7 +19,7 @@ export default function AddMembership() {
 
   const fetchMembership = async () => {
     await axios
-      .get("http://localhost:4000/plans/get-membership", {
+      .get("https://elite-fitness-hub-backend.onrender.com/plans/get-membership", {
         withCredentials: true,
       })
       .then((res) => {
@@ -41,7 +41,7 @@ export default function AddMembership() {
 
   const handleAddMemberShip = async () => {
     await axios
-      .post("http://localhost:4000/plans/add-membership", inputField, {
+      .post("https://elite-fitness-hub-backend.onrender.com/plans/add-membership", inputField, {
         withCredentials: true,
       })
       .then((res) => {

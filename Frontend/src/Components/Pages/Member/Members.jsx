@@ -23,7 +23,7 @@ const Members = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:4000/members/delete-member/${id}`, {
+      await axios.delete(`https://elite-fitness-hub-backend.onrender.com/members/delete-member/${id}`, {
         withCredentials: true,
       });
       setData(prevData => prevData.filter(item => item._id !== id));
@@ -48,7 +48,7 @@ const Members = () => {
   const fetchData = async (skip, limits) => {
     await axios
       .get(
-        `http://localhost:4000/members/all-member?skip=${skip}&limit=${limits}`,
+        `https://elite-fitness-hub-backend.onrender.com/members/all-member?skip=${skip}&limit=${limits}`,
         { withCredentials: true }
       )
       .then((res) => {
@@ -111,7 +111,7 @@ const Members = () => {
       setIsSearchModeOn(true);
       await axios
         .get(
-          `http://localhost:4000/members/searched-members?searchTerm=${search}`,
+          `https://elite-fitness-hub-backend.onrender.com/members/searched-members?searchTerm=${search}`,
           { withCredentials: true }
         )
         .then((res) => {
