@@ -51,6 +51,10 @@ const videos = [
   "/Videos/workout13.mp4",
   "/Videos/workout14.mp4",
   "/Videos/workout15.mp4",
+  "/Videos/workout16.mp4",
+  "/Videos/workout17.mp4",  
+  "/Videos/workout18.mp4",
+  "/Videos/workout19.mp4",
 ];
 
 const media = [

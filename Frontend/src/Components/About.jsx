@@ -7,6 +7,17 @@ import { motion } from "framer-motion";
 const About = () => {
   return (
     <section className="bg-black text-white px-4 py-12 md:px-20 lg:px-32">
+      {/* Highlighted Banner */}
+      <motion.div
+        className="bg-gradient-to-r from-orange-500 via-yellow-400 to-red-500 text-black font-bold text-center py-4 px-6 rounded-xl shadow-md text-lg sm:text-xl md:text-2xl mb-10 animate-pulse"
+        initial={{ opacity: 0, y: -20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        viewport={{ once: true }}
+      >
+      Dharwad's Fastest Powerlifting Academy🏋️ – State & National Level Powerlifter & Bench Presser 🏆🔥
+      </motion.div>
+
       <div className="flex flex-col md:flex-row items-center gap-12">
         <motion.div
           className="w-full md:w-5/12"

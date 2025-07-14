@@ -1,111 +1,111 @@
 import React from "react";
-import Arish from "../assets/Arish.jpg";
-import Afzal from "../assets/Afzal.jpg";
-import Juned from "../assets/Juned.jpg";
 import { motion } from "framer-motion";
+import Arish2 from "../assets/Arish2.jpg";
+import ArishVideo from "../assets/Video1.mp4";
 
-const trainerVariants = {
-  offscreen: {
-    y: 100,
-    opacity: 0,
-    scale: 0.9,
-  },
-  onscreen: {
-    y: 0,
+// Section entrance animation
+const sectionVariants = {
+  hidden: { opacity: 0, y: 60 },
+  visible: {
     opacity: 1,
-    scale: 1,
+    y: 0,
     transition: {
       type: "spring",
-      bounce: 0.3,
-      duration: 0.8,
+      stiffness: 100,
+      damping: 20,
+      staggerChildren: 0.2,
     },
   },
 };
 
-const Trainers = () => {
-  const trainerData = [
-    {
-      name: "Aarish Barudawale",
-      img: Arish,
-      desc: "Certified Trainer | 15 Years of Trusted Expertise in Professional Coaching",
-    },
-    {
-      name: "Afzal Barudawale",
-      img: Afzal,
-      desc: "Dedicated Trainer with 4 Years of Hands-On Experience in Delivering Real Results",
-    },
-    {
-      name: "Juned Mulla",
-      img: Juned,
-      desc: "Trusted Trainer Backed by 4 Years of Practical Coaching Excellence",
-    },
-  ];
-
-  return (
-    <motion.div
-      className="bg-black text-white py-10 px-6 md:px-20"
-      initial="offscreen"
-      whileInView="onscreen"
-      viewport={{ once: true, amount: 0.2 }}
-    >
-      <motion.h2
-        className="text-2xl font-bold text-center mb-4 text-orange-600 animate-pulse"
-        initial={{ opacity: 0, scale: 0.7 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6 }}
-      >
-        Meet Our Trainers💪
-      </motion.h2>
-      <motion.h4
-        className="text-1xl font-bold text-center mb-8"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.6 }}
-      >
-        Our trainers are here to dedicate the time and efforts that you need to
-        get in the best shape of your life.
-      </motion.h4>
-
-      <div className="grid md:grid-cols-3 gap-8">
-        {trainerData.map((trainer, index) => (
-          <motion.div
-            key={index}
-            className="bg-gray-800 p-6 rounded-2xl shadow-lg text-center cursor-pointer hover:scale-105 transition duration-300"
-            variants={trainerVariants}
-            transition={{ delay: index * 0.2 }}
-          >
-            <motion.img
-              className="h-72 w-full object-cover rounded-2xl hover:scale-110 transition duration-500"
-              src={trainer.img}
-              alt={trainer.name}
-              whileHover={{ rotate: 2 }}
-            />
-            <motion.h3
-              className="text-xl font-semibold mb-2 mt-4 text-orange-500"
-              initial={{ opacity: 0, y: 20, scale: 0.9 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-              whileHover={{
-                scale: 1.05,
-                color: "#facc15", // Tailwind's yellow-400
-                textShadow: "0px 0px 8px rgba(255, 255, 255, 0.8)",
-              }}
-            >
-              {trainer.name}
-            </motion.h3>
-            <motion.p
-              className="text-base text-gray-300"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              {trainer.desc}
-            </motion.p>
-          </motion.div>
-        ))}
-      </div>
-    </motion.div>
-  );
+// Card‑like media animation
+const mediaVariants = {
+  hidden: { opacity: 0, scale: 0.9, rotateY: -10 },
+  visible: { opacity: 1, scale: 1, rotateY: 0 },
+  hover: { scale: 1.05, rotateY: 1.5 },
 };
+
+const trainer = {
+  name: "Aarish Barudawale",
+  img: Arish2,
+  desc: "Certified Trainer · 15+ Years Transforming Lives",
+};
+
+const Trainers = () => (
+  <motion.section
+    className="bg-black text-white px-5 py-14 md:px-20 overflow-hidden"
+    variants={sectionVariants}
+    initial="hidden"
+    whileInView="visible"
+    viewport={{ once: true, amount: 0.2 }}
+  >
+    {/* Title */}
+    <motion.h2
+      className="text-center text-3xl sm:text-4xl md:text-5xl font-extrabold text-orange-500 mb-6 drop-shadow-lg tracking-wide animate-pulse"
+      variants={mediaVariants}
+      initial="hidden"
+      whileInView="visible"
+      transition={{ type: "spring", stiffness: 200 }}
+    >
+      Tiger Gym Coach
+    </motion.h2>
+
+    {/* Coach Name & Description */}
+    <motion.div className="text-center mb-8" variants={mediaVariants}>
+      <motion.h3
+        className="inline-block text-2xl sm:text-3xl font-bold text-white hover:text-orange-400 transition-transform duration-300"
+        whileHover={{ scale: 1.1, rotate: 1 }}
+        whileTap={{ scale: 1.05 }}
+      >
+        {trainer.name}
+      </motion.h3>
+      <motion.p
+        className="mt-1 text-base sm:text-lg text-gray-300 max-w-md mx-auto"
+        initial={{ opacity: 0, y: 8 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+      >
+        {trainer.desc}
+      </motion.p>
+    </motion.div>
+
+    {/* Media: image first on all screens */}
+    <div className="flex flex-col md:flex-row items-center gap-10 max-w-5xl mx-auto">
+      {/* IMAGE */}
+      <motion.div
+        className="group relative w-full md:w-1/2 cursor-pointer"
+        variants={mediaVariants}
+        whileHover="hover"
+      >
+        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-orange-500/30 to-red-600/20 blur-lg opacity-60 group-hover:opacity-80 transition" />
+        <motion.img
+          src={trainer.img}
+          alt="Tiger Coach"
+          className="relative w-full h-72 sm:h-80 md:h-[26rem] object-cover object-top rounded-2xl shadow-2xl"
+          variants={mediaVariants}
+        />
+      </motion.div>
+
+      {/* VIDEO */}
+      <motion.div
+        className="group relative w-full md:w-1/2 cursor-pointer"
+        variants={mediaVariants}
+        whileHover="hover"
+      >
+        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-red-600/20 to-orange-600/30 blur-lg opacity-60 group-hover:opacity-80 transition" />
+        <motion.video
+          src={ArishVideo}
+          autoPlay
+          muted
+          loop
+          playsInline
+          controls
+          className="relative w-full h-72 sm:h-80 md:h-[26rem] object-cover rounded-2xl shadow-2xl"
+          variants={mediaVariants}
+        />
+      </motion.div>
+    </div>
+  </motion.section>
+);
 
 export default Trainers;
