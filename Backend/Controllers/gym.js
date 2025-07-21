@@ -4,9 +4,9 @@ const jwt = require("jsonwebtoken");
 
 exports.register = async (req, res) => {
   try {
-    const { userName, email, password, profilePic } = req.body;
+    const { userName, email, password } = req.body;
 
-    if (!userName || !email || !password || !profilePic) {
+    if (!userName || !email || !password) {
       return res.status(400).json({ error: "All fields are required" });
     }
 
@@ -21,14 +21,6 @@ exports.register = async (req, res) => {
         .json({ error: "Password must be at least 6 characters" });
     }
 
-    // const allowedExt = ["jpg", "jpeg", "png"];
-    // const fileExt = profilePic.split(".").pop().toLowerCase();
-    // if (!allowedExt.includes(fileExt)) {
-    //   return res
-    //     .status(400)
-    //     .json({ error: "Only JPG, JPEG, and PNG images are allowed" });
-    // }
-
     const isExist = await Gym.findOne({ userName });
     if (isExist) {
       return res.status(400).json({ error: "User already exists" });
@@ -42,7 +34,6 @@ exports.register = async (req, res) => {
       userName,
       email,
       password: hashedPassword,
-      profilePic,
       role: isAdminExists ? "user" : "admin",
     });
 
