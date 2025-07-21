@@ -19,43 +19,6 @@ export default function Login() {
     setLoginField({ ...loginField, [name]: event.target.value });
   };
 
-  // const handleLogin = async (e) => {
-  //   e.preventDefault();
-
-  //   try {
-  //     const res = await axios.post(
-  //       "https://elite-fitness-hub-backend.onrender.com/auth/login",
-  //       loginField,
-  //       { withCredentials: true }
-  //     );
-  //     console.log(res.data);
-
-  //     localStorage.setItem("gymPic", res.data.gym.profilePic);
-  //     localStorage.setItem("isLogin", true);
-  //     localStorage.setItem("token", res.data.token);
-
-  //     toast.success(res.data.message);
-
-  //     setLoginField({
-  //       userName: "",
-  //       password: "",
-  //     });
-
-  //     if (res.data.gym.role === "admin") {
-  //       setTimeout(() => {
-  //         navigate("/dashboard");
-  //       }, 1000);
-  //     } else {
-  //       toast.error("Only admin can access the dashboard.");
-  //       setTimeout(() => {
-  //         navigate("/");
-  //       }, 3000);
-  //     }
-  //   } catch (err) {
-  //     const errorMessage = err.response?.data?.error || "Something went wrong";
-  //     toast.error(errorMessage);
-  //   }
-  // };
 
 const handleLogin = async (e) => {
   e.preventDefault();

@@ -10,7 +10,6 @@ export default function Signup() {
     userName: "",
     email: "",
     password: "",
-    profilePic: "",
   });
   const [loader, setLoader] = useState(false);
 
@@ -18,131 +17,48 @@ export default function Signup() {
     setInputField({ ...inputField, [field]: event.target.value });
   };
 
-  const uploadImage = async (event) => {
-    setLoader(true);
-    const file = event.target.files[0];
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const { userName, email, password } = inputField;
 
-    const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
-    if (!allowedTypes.includes(file.type)) {
-      toast.error("Only JPG, JPEG, and PNG images are allowed.");
-      setLoader(false);
-      return;
+    if (!userName || !email || !password) {
+      return toast.error("Please fill in all fields.");
     }
 
-    const data = new FormData();
-    data.append("file", file);
-    data.append("upload_preset", "The-Tiger-Gym");
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return toast.error("Please enter a valid email.");
+    }
+
+    if (password.length < 6) {
+      return toast.error("Password must be at least 6 characters long.");
+    }
 
     try {
-      const response = await axios.post(
-        "https://api.cloudinary.com/v1_1/dxgj9kcey/image/upload",
-        data
+      const res = await axios.post(
+        "https://elite-fitness-hub-backend.onrender.com/auth/register",
+        inputField
       );
-      const imageUrl = response.data.secure_url;
-      setInputField({ ...inputField, profilePic: imageUrl });
-      setLoader(false);
+
+      if (res?.data?.message) {
+        toast.success(res.data.message);
+        setTimeout(() => navigate("/login"), 2000);
+      } else {
+        toast.error("Unexpected response from server.");
+      }
+
+      setInputField({
+        userName: "",
+        email: "",
+        password: "",
+      });
     } catch (err) {
-      console.log(err);
-      setLoader(false);
-      toast.error("Image upload failed. Please try again.");
+      console.error(err);
+      const message =
+        err?.response?.data?.error || err?.message || "Something went wrong.";
+      toast.error(message);
     }
   };
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   const { userName, email, password, profilePic } = inputField;
-
-  //   if (!userName || !email || !password || !profilePic) {
-  //     return toast.error("Please fill in all fields.");
-  //   }
-
-  //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  //   if (!emailRegex.test(email)) {
-  //     return toast.error("Please enter a valid email.");
-  //   }
-
-  //   if (password.length < 6) {
-  //     return toast.error("Password must be at least 6 characters long.");
-  //   }
-
-  //   const validExtensions = ["jpg", "jpeg", "png"];
-  //   const fileExt = profilePic.split(".").pop().toLowerCase();
-  //   if (!validExtensions.includes(fileExt)) {
-  //     return toast.error("Profile photo must be JPG, JPEG, or PNG.");
-  //   }
-
-  //   try {
-  //     const res = await axios.post(
-  //       "http://localhost:4000/auth/register",
-  //       inputField
-  //     );
-  //     toast.success(res.data.message);
-
-  //     setTimeout(() => {
-  //       navigate("/login");
-  //     }, 2000);
-
-  //     setInputField({
-  //       userName: "",
-  //       email: "",
-  //       password: "",
-  //       profilePic: "",
-  //     });
-  //   } catch (err) {
-  //     console.error(err);
-  //     toast.error(err.response.data.error || "Something went wrong.");
-  //   }
-  // };
-
-  const handleSubmit = async (e) => {
-  e.preventDefault();
-  const { userName, email, password, profilePic } = inputField;
-
-  if (!userName || !email || !password || !profilePic) {
-    return toast.error("Please fill in all fields.");
-  }
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    return toast.error("Please enter a valid email.");
-  }
-
-  if (password.length < 6) {
-    return toast.error("Password must be at least 6 characters long.");
-  }
-
-  const validExtensions = ["jpg", "jpeg", "png"];
-  const fileExt = profilePic.split(".").pop().toLowerCase();
-  if (!validExtensions.includes(fileExt)) {
-    return toast.error("Profile photo must be JPG, JPEG, or PNG.");
-  }
-
-  try {
-    const res = await axios.post(
-      "https://elite-fitness-hub-backend.onrender.com/auth/register",
-      inputField
-    );
-
-    if (res?.data?.message) {
-      toast.success(res.data.message);
-      setTimeout(() => navigate("/login"), 2000);
-    } else {
-      toast.error("Unexpected response from server.");
-    }
-
-    setInputField({
-      userName: "",
-      email: "",
-      password: "",
-      profilePic: "",
-    });
-  } catch (err) {
-    console.error(err);
-    const message =
-      err?.response?.data?.error || err?.message || "Something went wrong.";
-    toast.error(message);
-  }
-};
 
   return (
     <div className="bg-black/50 backdrop-blur-sm min-h-screen text-white flex items-center justify-center px-4 sm:px-6 md:px-8">
@@ -185,30 +101,6 @@ export default function Signup() {
               className="w-full px-4 py-2 rounded-md bg-gray-900 text-white border border-orange-500 focus:outline-none focus:ring-2 focus:ring-yellow-600"
               placeholder="********"
             />
-          </div>
-
-          <div>
-            <label className="block mb-1 text-sm font-semibold">
-              Profile Photo
-            </label>
-            <input
-              type="file"
-              onChange={uploadImage}
-              accept="image/*"
-              className="w-full bg-gray-800 text-white file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-yellow-600 file:text-white hover:file:bg-yellow-700"
-            />
-            {loader && (
-              <div className="flex justify-center mt-2">
-                <CircularProgress size={24} sx={{ color: "yellow" }} />
-              </div>
-            )}
-            {inputField.profilePic && (
-              <img
-                src={inputField.profilePic}
-                alt="Preview"
-                className="mt-4 h-24 w-24 rounded-full object-cover object-center mx-auto border-2 border-yellow-400"
-              />
-            )}
           </div>
 
           <button

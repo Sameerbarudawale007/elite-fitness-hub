@@ -57,9 +57,12 @@ const AddMembers = () => {
 
   const fetchMembership = async () => {
     try {
-      const res = await axios.get("https://elite-fitness-hub-backend.onrender.com/plans/get-membership", {
-        withCredentials: true,
-      });
+      const res = await axios.get(
+        "https://elite-fitness-hub-backend.onrender.com/plans/get-membership",
+        {
+          withCredentials: true,
+        }
+      );
 
       setMembershipList(res.data.membership);
       if (res.data.membership.length === 0) {
@@ -84,7 +87,15 @@ const AddMembers = () => {
       inputField;
 
     // Basic validation
-    if (!name || !mobile || !aadhaar || !address || !joiningDate || !membership || !file) {
+    if (
+      !name ||
+      !mobile ||
+      !aadhaar ||
+      !address ||
+      !joiningDate ||
+      !membership ||
+      !file
+    ) {
       return toast.error("All fields are required.");
     }
 
@@ -150,9 +161,14 @@ const AddMembers = () => {
           Add New Member
         </h2>
 
-        <form className="grid grid-cols-1 sm:grid-cols-2 gap-6" onSubmit={(e) => e.preventDefault()}>
+        <form
+          className="grid grid-cols-1 sm:grid-cols-2 gap-6"
+          onSubmit={(e) => e.preventDefault()}
+        >
           <div>
-            <label className="block text-sm font-medium text-white mb-2">Name of the Joinee</label>
+            <label className="block text-sm font-medium text-white mb-2">
+              Name of the Joinee
+            </label>
             <input
               type="text"
               value={inputField.name}
@@ -164,7 +180,9 @@ const AddMembers = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-white mb-2">Mobile Number</label>
+            <label className="block text-sm font-medium text-white mb-2">
+              Mobile Number
+            </label>
             <input
               type="tel"
               value={inputField.mobile}
@@ -181,7 +199,9 @@ const AddMembers = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-white mb-2">Aadhaar Number</label>
+            <label className="block text-sm font-medium text-white mb-2">
+              Aadhaar Number
+            </label>
             <input
               type="text"
               value={inputField.aadhaar}
@@ -196,11 +216,11 @@ const AddMembers = () => {
 
           <div>
             <label className="block text-sm font-medium text-white mb-2">
-              Date of Joining <span className="text-gray-400 text-xs">(select date)</span>
+              Date of Joining{" "}
+              <span className="text-gray-400 text-xs">(select date)</span>
             </label>
             <input
               type="date"
-              min={new Date().toISOString().split("T")[0]}
               value={inputField.joiningDate}
               onChange={(e) => handleOnChange(e, "joiningDate")}
               className="w-full px-4 py-3 rounded-lg bg-zinc-700 text-white"
@@ -209,7 +229,9 @@ const AddMembers = () => {
           </div>
 
           <div className="sm:col-span-2">
-            <label className="block text-sm font-medium text-white mb-2">Address</label>
+            <label className="block text-sm font-medium text-white mb-2">
+              Address
+            </label>
             <textarea
               value={inputField.address}
               onChange={(e) => handleOnChange(e, "address")}
@@ -221,7 +243,9 @@ const AddMembers = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-white mb-2">Profile Photo</label>
+            <label className="block text-sm font-medium text-white mb-2">
+              Profile Photo
+            </label>
             <input
               type="file"
               onChange={uploadImage}
@@ -243,7 +267,9 @@ const AddMembers = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-white mb-2">Membership</label>
+            <label className="block text-sm font-medium text-white mb-2">
+              Membership
+            </label>
             <select
               value={selectedOption}
               onChange={handleOnChangeSelect}
@@ -252,7 +278,8 @@ const AddMembers = () => {
             >
               {membershipList.map((item, index) => (
                 <option key={index} value={item._id}>
-                  {item.title} - {item.months} Month{item.months > 1 ? "s" : ""} - ₹{item.price}
+                  {item.title} - {item.months} Month{item.months > 1 ? "s" : ""}{" "}
+                  - ₹{item.price}
                 </option>
               ))}
             </select>
