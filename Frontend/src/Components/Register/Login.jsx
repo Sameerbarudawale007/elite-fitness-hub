@@ -98,7 +98,7 @@ const handleLogin = async (e) => {
             Login
           </button>
           <p className="text-sm sm:text-base md:text-sm text-center px-2 sm:px-4">
-            🙋‍♂️ Don't have an account?{" "}
+            🙋‍♂️ Don't have an Account?{" "}
             <Link
               to="/signup"
               className="text-yellow-300 underline hover:text-yellow-400 transition duration-200"
